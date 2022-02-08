@@ -25,6 +25,8 @@ let stats = {
 	hiddenCells: 0,
 	totalCells: 0,
 	lost: false,
+	won: false,
+	timerStopped: true
 }
 
 let interval;
@@ -37,6 +39,7 @@ function initialize(){
 		hiddenCells: 0,
 		totalCells: 0,
 		lost: false,
+		won: false,
 		timerStopped: true
 	}
 		//define the bombs
@@ -128,14 +131,13 @@ export default function App() {
 			}else {
 				minString = min.toString();
 			}
-			//TODO -> Solucionar cuando llegue a 60
 			setTimer(minString + ":" + secsString);
 			//setTimer(Math.floor((Date.now() - startingTime)/1000)%60);
 		}
 	}
 	//game logic
 	function mainPopper(x, y){
-		if (!stats.lost){
+		if (!stats.lost && !stats.won){
 			//start timer
 			if (stats.timerStopped){
 				stats.timerStopped = false;
@@ -143,20 +145,21 @@ export default function App() {
 			}
 			let res = valueMap[x][y].pop(valueMap, [10, 10], setColorStateMap, setValueStateMap);
 			if (res == -1){
-				//clearInterval(interval);
 				Alert.alert('You lost', 'A bomb exploded');
 				stats.lost = true;
 				stats.timerStopped = true;
 			}else {
 				if (hiddenCells - res === 0){
-					//clearInterval(interval);
 					stats.timerStopped = true;
-					Alert.alert('You won!', 'You were able to clear all the cells in xxxx minutes!')
+					stats.won = true;
+					Alert.alert('You won!', 'You were able to clear all the cells in ' + timer + ' minutes!')
 				}
 				setHiddenCells(hiddenCells - res);
 			}
-		}else {
-			Alert.alert('YOU ALREADY LOST', 'Please restart the game in order to play')
+		}else if(stats.lost) {
+			Alert.alert('YOU ALREADY LOST', 'Please restart the game in order to play');
+		}else if (stats.won) {
+			Alert.alert('YOU ALREADY WON', 'You were able to clear all the cells in ' + timer + ' minutes!');
 		}
 	}
 	const generateMapElements = () => {
