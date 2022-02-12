@@ -5,14 +5,12 @@ class CellClass {
 		this.x = x;
 		this.y = y;
 	}
-	//map of Cell classes[][], table size[x, y]
 	pop (objectsMap, t_size, setColorStateMap, setValueStateMap){
 		let count = 0;
 		if (!this.found){
 			this.found = true;
 			this.showVal(setColorStateMap, setValueStateMap);
 			if (this.value == -1){
-				//endgame
 				return (-1);
 			}else {
 				if (this.value == 0){
